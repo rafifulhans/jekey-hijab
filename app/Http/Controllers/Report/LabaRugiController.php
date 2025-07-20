@@ -80,7 +80,7 @@ class LabaRugiController extends Controller
         return view('dashboard.pages.report.laba-rugi.index', [
             'laba_rugi' => $laba_rugi,
             'total_bersih' => $total_bersih,
-            'date_filter' => date('m-d-Y', strtotime($date_start ?? 'now')) . ' - ' . date('m-d-Y', strtotime($date_end ?? 'now'))
+            'date_filter' => date('m-d-Y', strtotime($date_start ?? '-3 month')) . ' - ' . date('m-d-Y', strtotime($date_end ?? 'now'))
         ]);
     }
 

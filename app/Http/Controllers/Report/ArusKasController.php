@@ -82,7 +82,7 @@ class ArusKasController extends Controller
             'total_bersih' => $total_bersih,
             'total_pendapatan' => $total_pendapatan,
             'total_pengeluaran' => $total_pengeluaran,
-            'date_filter' => date('m-d-Y', strtotime($date_start ?? 'now')) . ' - ' . date('m-d-Y', strtotime($date_end ?? 'now'))
+            'date_filter' => date('m-d-Y', strtotime($date_start ?? '-3 month')) . ' - ' . date('m-d-Y', strtotime($date_end ?? 'now'))
         ]);
     }
 
