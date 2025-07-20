@@ -35,6 +35,7 @@
         <x-dashboard.sidebar-link icon="ti ti-receipt" link="{{ route('invoice') }}" title="Invoice" />
         @break
     @case(3)
+        <x-dashboard.sidebar-link icon="ti ti-aperture" link="{{ route('penjualan') }}" title="Riwayat Penjualan" />
         <x-dashboard.sidebar-link-dropdown :submenus="$submenu_laporan_keuangan" :icon="'ti ti-layout-grid'"
             link="{{ route('laba-rugi') }}" title="Laporan Keuangan"></x-dashboard.sidebar-link-dropdown>
         <x-dashboard.sidebar-link-dropdown :submenus="[

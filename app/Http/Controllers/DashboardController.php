@@ -16,15 +16,21 @@ class DashboardController extends Controller
         
         switch ($user->role) {
             case 1: // Leader
-                $total_penjualan = Penjualan::where('status_pembayaran', '=', 1)->count(); // 1 = Berhasil
-                $total_revenue = Penjualan::where('status_pembayaran', '=', 1)->sum('total');
+                $total_penjualan = Penjualan::where([
+                    'status_pembayaran' => 1,
+                    'status_persetujuan' => 1
+                ])->count(); // 1 = Berhasil
+                $total_revenue = Penjualan::where([
+                    'status_pembayaran' => 1,
+                    'status_persetujuan' => 1
+                ])->sum('total');
                 $total_revenue = Number::currency($total_revenue, 'IDR', 'id_ID');
 
                 return view('dashboard.users.leader.index', compact('total_penjualan', 'total_revenue'));
             case 2: // Sales 
                 return redirect()->route('penjualan');
             case 3: // Finance
-                return redirect()->route('jurnal-transaksi');
+                return redirect()->route('penjualan');
             default:
                 return redirect()->route('dashboard');
         }
