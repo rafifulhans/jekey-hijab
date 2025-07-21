@@ -94,7 +94,7 @@
             </div>
             <div class="col-12 col-md-6 col-lg-3 mb-3">
                 <label for="total" class="form-label">Total</label>
-                <input type="number" class="form-control" id="total" name="total" value="{{ old('total') ?? $penjualan->total }}">
+                <input type="number" class="form-control" id="total" name="total" value="{{ old('total') ?? $penjualan->total }}" disabled>
                 @error('total')
                     <div class="alert alert-danger">{{ $message }}</div>
                 @enderror
@@ -169,5 +169,48 @@
             </div>
         </div>
     </x-form>
+
+    @section('scripts')
+        <script type="text/javascript">
+
+            $(document).ready(function(){
+
+                sumTotal();
+
+                $('#subtotal').keyup(function(){
+                    sumTotal();
+                });
+
+                $('#diskon').keyup(function(){
+                    sumTotal();
+                });
+
+                $('#ongkir').keyup(function(){
+                    sumTotal();
+                });
+
+                $('#qty').keyup(function(){
+                    sumTotal();
+                });
+
+                function sumTotal(){
+
+                    let subtotal = Number($('#subtotal').val()) || 0;
+                    let diskon   = Number($('#diskon').val())   || 0;
+                    let ongkir   = Number($('#ongkir').val())   || 0;
+                    let qty      = Number($('#qty').val())   || 0;
+
+                    let total = (subtotal * qty) - diskon + ongkir;
+
+                    if (!isNaN(total)) {
+                        $('#total').val(total);
+                    } else {
+                        $('#total').val(''); 
+                    }
+                }
+            });
+
+        </script>
+    @endsection
 
 </x-dashboard>

@@ -2,13 +2,20 @@
     
     @include('sweetalert::alert')
 
-    <div class="d-flex justify-content-end align-items-center mb-3">
-    @if (auth()->user()->role == 3)
-        <a href="{{ route('jurnal-penyesuaian.tambah') }}" class="btn btn-primary m-1">Tambah</a>
-    @endif
+    @if (!empty($jurnal_transaksi))
+        <div class="d-flex justify-content-end align-items-center mb-3">
+        @if (auth()->user()->role == 3)
+            <a href="{{ route('jurnal-penyesuaian.tambah') }}" class="btn btn-primary m-1">Tambah</a>
+        @endif
 
-        <a href="{{ route('jurnal-penyesuaian.export') }}" class="btn btn-success m-1" target="_blank">Export</a>
-    </div>
+            <a href="{{ route('jurnal-penyesuaian.export') }}" class="btn btn-success m-1" target="_blank">Export</a>
+        </div>
+    @else
+        <div class="alert alert-warning">
+            <i class="fw-bolder ti ti-help"></i>
+            Mohon input jurnal transaksi terlebih dahulu!
+        </div>
+    @endif
 
     <div class="col-12">
         <div class="card">
@@ -33,35 +40,43 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($jurnal_penyesuaian as $date => $jurp)
-                                @foreach ($jurp as $jup)
-                                    <tr>
-                                        <td>{{ $date }}</td>
-                                        <td>{{ $jup['nama_akun'] }}</td>
-                                        <td>{{ \App\Models\Ref::with('jurnalPenyesuaian')->where('id_ref', $jup['id_ref'])->first()->kode }}</td>
-                                        @switch($jup['type'])
-                                            @case(1)
-                                                <td>{{ Number::currency($jup['total'], 'IDR', 'id_ID') }}</td>
-                                                <td>-</td>
-                                                @break
-                                            @case(2)
-                                                <td>-</td>
-                                                <td>{{ Number::currency($jup['total'], 'IDR', 'id_ID') }}</td>
-                                                @break
-                                        @endswitch
-                                        <td>
-                                            @if (auth()->user()->role == 3)
-                                                <a href="{{ route('jurnal-penyesuaian.edit', $jup['id_jurnal_penyesuaian']) }}" class="btn btn-warning btn-sm">Edit</a>
-                                                <form action="{{ route('jurnal-penyesuaian.hapus', $jup['id_jurnal_penyesuaian']) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm btn-delete">Hapus</button>
-                                                </form>
-                                            @endif
-                                        </td>
-                                    </tr>
+                            @if (empty($jurnal_transaksi))
+                                <tr>
+                                    <td colspan="6" class="text-center">
+                                        <i class="text-muted">Belum Ada Data</i>
+                                    </td>
+                                </tr>
+                            @else
+                                @foreach ($jurnal_penyesuaian as $date => $jurp)
+                                    @foreach ($jurp as $jup)
+                                        <tr>
+                                            <td>{{ $date }}</td>
+                                            <td>{{ $jup['nama_akun'] }}</td>
+                                            <td>{{ \App\Models\Ref::with('jurnalPenyesuaian')->where('id_ref', $jup['id_ref'])->first()->kode }}</td>
+                                            @switch($jup['type'])
+                                                @case(1)
+                                                    <td>{{ Number::currency($jup['total'], 'IDR', 'id_ID') }}</td>
+                                                    <td>-</td>
+                                                    @break
+                                                @case(2)
+                                                    <td>-</td>
+                                                    <td>{{ Number::currency($jup['total'], 'IDR', 'id_ID') }}</td>
+                                                    @break
+                                            @endswitch
+                                            <td>
+                                                @if (auth()->user()->role == 3)
+                                                    <a href="{{ route('jurnal-penyesuaian.edit', $jup['id_jurnal_penyesuaian']) }}" class="btn btn-warning btn-sm">Edit</a>
+                                                    <form action="{{ route('jurnal-penyesuaian.hapus', $jup['id_jurnal_penyesuaian']) }}" method="POST" class="d-inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-danger btn-sm btn-delete">Hapus</button>
+                                                    </form>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
                                 @endforeach
-                            @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>

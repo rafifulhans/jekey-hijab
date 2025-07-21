@@ -12,12 +12,15 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\JurnalPenyesuaian;
 use App\Models\Ref;
 use App\Models\LabaRugi;
+use App\Models\JurnalTransaksi;
 
 class JurnalPenyesuaianController extends Controller
 {
+
     public function indeks()
     {
-        $jurnal_penyesuaian_all = JurnalPenyesuaian::orderByDesc('created_at')->get();
+        $jurnal_transaksi = JurnalTransaksi::first();
+        $jurnal_penyesuaian_all = JurnalPenyesuaian::orderBy('created_at', 'asc')->get();
 
         $jurnal_penyesuaian = [];
         foreach ($jurnal_penyesuaian_all as $jup) {
@@ -25,12 +28,19 @@ class JurnalPenyesuaianController extends Controller
         }
 
         return view('dashboard.pages.report.jurnal-penyesuaian.index', [
-            'jurnal_penyesuaian' => $jurnal_penyesuaian
+            'jurnal_penyesuaian' => $jurnal_penyesuaian,
+            'jurnal_transaksi' => $jurnal_transaksi
         ]);
     }
 
     public function tambah()
     {
+        $jurnal_transaksi = JurnalTransaksi::first();
+        if (empty($jurnal_transaksi)) 
+        {
+            Alert::warning('Maaf', 'Jurnal transaksi perlu di buat terlebih dahulu!');
+            return redirect()->route('jurnal-penyesuaian');
+        }
 
         return view('dashboard.pages.report.jurnal-penyesuaian.form', [
             'jurnal_penyesuaian' => new JurnalPenyesuaian(),
@@ -46,7 +56,6 @@ class JurnalPenyesuaianController extends Controller
 
     public function simpan(Request $request)
     {
-
         $request->validate([
             'tanggal' => 'required|date',
             'keterangan' => 'required|string|min:3|max:255',
@@ -54,6 +63,13 @@ class JurnalPenyesuaianController extends Controller
             'ref' => 'required|exists:ref,id_ref',
             'type' => 'required|in:1,2'
         ]);
+
+        $jurnal_transaksi = JurnalTransaksi::first();
+        if (empty($jurnal_transaksi)) 
+        {
+            Alert::warning('Maaf', 'Jurnal transaksi perlu di buat terlebih dahulu!');
+            return redirect()->route('jurnal-penyesuaian');
+        }
 
         JurnalPenyesuaian::create([
             'tanggal' => $request->input('tanggal'),
@@ -67,18 +83,21 @@ class JurnalPenyesuaianController extends Controller
         $q_update_neraca = [];
 
         $neraca = NeracaSaldo::where('id_ref', $request->input('ref'))->first();
-        switch ($request->input('type')) {
-            case 1:
-                $debit_sum = $request->input('total') - $neraca->debit;
-                $q_update_neraca['debit'] = $neraca->debit + $debit_sum;
-                break;
-            case 2:
-                $kredit_sum = $request->input('total') - $neraca->kredit;
-                $q_update_neraca['kredit'] = $neraca->kredit + $kredit_sum;
-                break;
-        }
 
-        NeracaSaldo::where('id_neraca_saldo', $neraca->id_neraca_saldo)->update($q_update_neraca);
+        if (!empty($neraca)) {
+            switch ($request->input('type')) {
+                case 1:
+                    $debit_sum = $request->input('total') - $neraca->debit;
+                    $q_update_neraca['debit'] = $neraca->debit + $debit_sum;
+                    break;
+                case 2:
+                    $kredit_sum = $request->input('total') - $neraca->kredit;
+                    $q_update_neraca['kredit'] = $neraca->kredit + $kredit_sum;
+                    break;
+            }
+         
+            NeracaSaldo::where('id_neraca_saldo', $neraca->id_neraca_saldo)->update($q_update_neraca);
+        }
 
         $laba_rugi = LabaRugi::where([
             'id_ref' => $request->input('ref'),
@@ -86,8 +105,7 @@ class JurnalPenyesuaianController extends Controller
             'tanggal' => $request->input('tanggal')
         ])->first();
 
-        if (!empty($laba_rugi))
-        {
+        if (!empty($laba_rugi)) {
             $total_sum = $request->input('total') - ($laba_rugi->total ?? 0);
 
             LabaRugi::where('id_laba_rugi', $laba_rugi->id_laba_rugi)->update([
@@ -105,11 +123,11 @@ class JurnalPenyesuaianController extends Controller
             'jurnal_penyesuaian' => JurnalPenyesuaian::where('id_jurnal_penyesuaian', $id)->first(),
             'refs' => Ref::all(),
             'page_meta' => [
-                'title' => 'Edit Jurnal Penyesuaian',
-                'type' => 'edit',
-                'method' => 'PUT',
-                'action' => route('jurnal-penyesuaian.update', $id)
-            ]
+                    'title' => 'Edit Jurnal Penyesuaian',
+                    'type' => 'edit',
+                    'method' => 'PUT',
+                    'action' => route('jurnal-penyesuaian.update', $id)
+                ]
         ]);
     }
 
@@ -120,6 +138,13 @@ class JurnalPenyesuaianController extends Controller
             'total' => 'required|numeric|min:0',
         ]);
 
+        $jurnal_transaksi = JurnalTransaksi::first();
+        if (empty($jurnal_transaksi)) 
+        {
+            Alert::warning('Maaf', 'Jurnal transaksi perlu di buat terlebih dahulu!');
+            return redirect()->route('jurnal-penyesuaian');
+        }
+
         $jurnal_penyesuaian = JurnalPenyesuaian::where('id_jurnal_penyesuaian', $id)->first();
 
         JurnalPenyesuaian::where('id_jurnal_penyesuaian', $id)->update([
@@ -127,21 +152,24 @@ class JurnalPenyesuaianController extends Controller
             'total' => $request->input('total'),
         ]);
 
-        $q_update_neraca = [];
-
         $neraca = NeracaSaldo::where('id_ref', $request->input('ref'))->first();
-        switch ($request->input('type')) {
-            case 1:
-                $debit_sum = $request->input('total') - $neraca->debit;
-                $q_update_neraca['debit'] = $neraca->debit + $debit_sum;
-                break;
-            case 2:
-                $kredit_sum = $request->input('total') - $neraca->kredit;
-                $q_update_neraca['kredit'] = $neraca->kredit + $kredit_sum;
-                break;
-        }
 
-        NeracaSaldo::where('id_ref', $request->input('ref'))->update($q_update_neraca);
+        if (!empty($neraca)) {
+            $q_update_neraca = [];
+
+            switch ($request->input('type')) {
+                case 1:
+                    $debit_sum = $request->input('total') - $neraca->debit;
+                    $q_update_neraca['debit'] = $neraca->debit + $debit_sum;
+                    break;
+                case 2:
+                    $kredit_sum = $request->input('total') - $neraca->kredit;
+                    $q_update_neraca['kredit'] = $neraca->kredit + $kredit_sum;
+                    break;
+            }
+
+            NeracaSaldo::where('id_ref', $request->input('ref'))->update($q_update_neraca);
+        }
 
         $laba_rugi = LabaRugi::where([
             'id_ref' => $jurnal_penyesuaian->id_ref,
@@ -149,11 +177,14 @@ class JurnalPenyesuaianController extends Controller
             'tanggal' => $jurnal_penyesuaian->tanggal,
         ])->first();
 
-        $total_sum = $request->input('total') - $laba_rugi->total;
+        if (!empty($laba_rugi)) {
+            
+            $total_sum = $request->input('total') - $laba_rugi->total;
 
-        LabaRugi::where('id_laba_rugi', $laba_rugi->id_laba_rugi)->update([
-            'total' => $laba_rugi->total + $total_sum
-        ]);
+            LabaRugi::where('id_laba_rugi', $laba_rugi->id_laba_rugi)->update([
+                'total' => $laba_rugi->total + $total_sum
+            ]);
+        }
 
         Alert::success('Berhasil', 'Jurnal Penyesuaian Berhasil Diubah');
         return redirect()->route('jurnal-penyesuaian');
@@ -161,7 +192,6 @@ class JurnalPenyesuaianController extends Controller
 
     public function hapus($id)
     {
-
         JurnalPenyesuaian::where('id_jurnal_penyesuaian', $id)->delete();
 
         Alert::success('Berhasil', 'Jurnal Penyesuaian Berhasil Dihapus');
