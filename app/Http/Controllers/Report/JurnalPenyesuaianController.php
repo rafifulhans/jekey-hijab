@@ -200,7 +200,7 @@ class JurnalPenyesuaianController extends Controller
 
     public function export()
     {
-        $jurnal_penyesuaian_all = JurnalPenyesuaian::orderBy('created_at')->get();
+        $jurnal_penyesuaian_all = JurnalPenyesuaian::orderBy('created_at', 'asc')->get();
 
         // Ambil tanggal paling awal & akhir
         $first = $jurnal_penyesuaian_all->first();

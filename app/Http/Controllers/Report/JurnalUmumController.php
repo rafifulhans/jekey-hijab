@@ -55,10 +55,10 @@ class JurnalUmumController extends Controller
          if (!empty(session()->get('date-filter'))) 
         {
             $date = session()->get('date-filter');
-            $jurnal_umum_all = JurnalUmum::whereBetween('tanggal', [$date['start'], $date['end']])->orderByDesc('tanggal')->orderByDesc('created_at')->get();
+            $jurnal_umum_all = JurnalUmum::whereBetween('tanggal', [$date['start'], $date['end']])->orderBy('tanggal', 'asc')->orderBy('created_at', 'asc')->get();
 
         } else {
-            $jurnal_umum_all = JurnalUmum::orderByDesc('tanggal')->orderByDesc('created_at')->get();
+            $jurnal_umum_all = JurnalUmum::orderBy('tanggal', 'asc')->orderBy('created_at', 'asc')->get();
         }
 
         $jurnal_umum = [];

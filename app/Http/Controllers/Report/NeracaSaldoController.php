@@ -48,7 +48,7 @@ class NeracaSaldoController extends Controller
         if (!empty(session()->get('date-filter'))) 
         {
             $date = session()->get('date-filter');
-            $neraca_saldo = NeracaSaldo::whereBetween('created_at', [$date['start'], $date['end']])->orderBy('id_ref')->get();
+            $neraca_saldo = NeracaSaldo::whereBetween('created_at', [$date['start'], $date['end']])->orderBy('id_ref', 'asc')->get();
 
         } else {
             $neraca_saldo = NeracaSaldo::orderBy('id_ref')->get();

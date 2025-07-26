@@ -83,10 +83,10 @@ class BukuBesarController extends Controller
         if (!empty(session()->get('date-filter'))) 
         {
             $date = session()->get('date-filter');
-            $buku_besar = BukuBesar::whereBetween('tanggal', [$date['start'], $date['end']])->orderByDesc('tanggal')->orderByDesc('created_at')->get();
+            $buku_besar = BukuBesar::whereBetween('tanggal', [$date['start'], $date['end']])->orderBy('tanggal', 'asc')->orderBy('created_at', 'asc')->get();
 
         } else {
-            $buku_besar = BukuBesar::orderByDesc('tanggal')->orderByDesc('created_at')->get();
+            $buku_besar = BukuBesar::orderBy('tanggal', 'asc')->orderBy('created_at', 'asc')->get();
         }
 
         // Ambil tanggal paling awal & akhir

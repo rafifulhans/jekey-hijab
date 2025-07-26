@@ -467,10 +467,10 @@ class JurnalTransaksiController extends Controller
         if (!empty(session()->get('date-filter'))) 
         {
             $date = session()->get('date-filter');
-            $jurnal_transaksi = JurnalTransaksi::whereBetween('tanggal', [$date['start'], $date['end']])->orderByDesc('tanggal')->orderByDesc('created_at')->get();
+            $jurnal_transaksi = JurnalTransaksi::whereBetween('tanggal', [$date['start'], $date['end']])->orderBy('tanggal', 'asc')->orderBy('created_at', 'asc')->get();
 
         } else {
-            $jurnal_transaksi = JurnalTransaksi::orderByDesc('tanggal')->orderByDesc('created_at')->get();
+            $jurnal_transaksi = JurnalTransaksi::orderBy('tanggal', 'asc')->orderBy('created_at', 'asc')->get();
         }
 
         $jurnal_transaksi->map(function ($jurnal_transaksi) {
