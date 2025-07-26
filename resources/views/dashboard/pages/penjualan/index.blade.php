@@ -62,7 +62,7 @@
                                     <td>{{ config('status.order')[$penjualan->status_order] }}</td>
                                     <td>{{ config('status.pembayaran')[$penjualan->status_pembayaran] }}</td>
                                     <td>{{ $penjualan->metode_pembayaran }}</td>
-                                    <td>{{ $penjualan->tanggal_pembayaran }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($penjualan->tanggal_pembayaran)->translatedFormat('d-m-Y') }}</td>
                                     <td>{{ config('status.persetujuan')[$penjualan->status_persetujuan] }}</td>
                                     <td>
                                         @if (auth()->user()->role == 2)

@@ -34,7 +34,7 @@
                                     <td class="text-center">
                                         <h6 class="mb-0">{{ $invoice->invoice }}</h6>
                                     </td>
-                                    <td>{{ $invoice->tanggal }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($invoice->tanggal)) }}</td>
                                     <td>{{ $invoice->nama_customer }}</td>
                                     <td>{{ $invoice->alamat_customer }}</td>
                                     <td>{{ $invoice->total_barang }}</td>

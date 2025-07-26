@@ -57,14 +57,32 @@ class NeracaSaldoController extends Controller
         $first = $neraca_saldo->first();
         $last = $neraca_saldo->last();
 
-        $start = $first ? date('d-m-Y', strtotime($first->created_at)) : '-';
-        $end = $last ? date('d-m-Y', strtotime($last->created_at)) : '-';
+        if (!empty($first) && !empty($last)) 
+        {
+            if ($first->tanggal == $last->tanggal) {
+                $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+            } else {
 
-        $filename = "Neraca Saldo ({$start} - {$end}).pdf";
+                if (date('m-Y', strtotime($first->tanggal)) == date('m-Y', strtotime($last->tanggal)) &&
+                    date('d', strtotime($first->tanggal)) != date('d', strtotime($last->tanggal))) 
+                {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j ') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j') .' ' .\Carbon\Carbon::parse($first->tanggal)->translatedFormat('F Y');
+                } else {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+                }
+            }
+        } else if(!empty($first) && empty($last)) {
+            $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+        } else {
+            $periode = \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+        }
+
+        $filename = "Neraca Saldo ({$periode}).pdf";
 
         $pdf = Pdf::loadView('dashboard.pages.report.neraca-saldo.export', [
             'neraca_saldo' => $neraca_saldo,
-            'title' => $filename
+            'title' => $filename,
+            'periode' => $periode
         ]);
         return $pdf->download($filename);
     }

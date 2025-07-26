@@ -54,8 +54,8 @@
                                     <td>
                                         <h6 class="mb-0">{{ Number::currency($pgr->nominal, 'IDR', 'id_ID') }}</h6>
                                     </td>
-                                    <td>{{ $pgr->created_at }}</td>
-                                    <td>{{ $pgr->updated_at }}</td>
+                                    <td>{{ date('d-m-Y H:i:s', strtotime($pgr->created_at)) }}</td>
+                                    <td>{{ date('d-m-Y H:i:s', strtotime($pgr->updated_at)) }}</td>
                                     <td>
                                         @if (auth()->user()->role == 3)
                                             @if (!in_array($pgr->status_persetujuan, [1, 2]))

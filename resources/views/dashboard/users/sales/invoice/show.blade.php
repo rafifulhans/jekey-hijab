@@ -16,7 +16,7 @@
                 </h5>
                 <h5 class="d-flex justify-content-between fs-4">
                     <span>Tanggal:</span>
-                    <span class="text-muted">{{ $invoice->tanggal }}</span>
+                    <span class="text-muted">{{ date('d-m-Y', strtotime($invoice->tanggal)) }}</span>
                 </h5>
                 <h5 class="d-flex flex-column fs-4">
                     <span>Kepada:</span>

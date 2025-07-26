@@ -64,21 +64,40 @@ class JurnalUmumController extends Controller
         $jurnal_umum = [];
 
         foreach ($jurnal_umum_all as $ju) {
-            $jurnal_umum[date('Y', strtotime($ju->tanggal))][date('m', strtotime($ju->tanggal))][] = $ju;
+            $jurnal_umum[date('Y', strtotime($ju->tanggal))][date('n', strtotime($ju->tanggal))][] = $ju;
+            @$jurnal_umum[date('Y', strtotime($ju->tanggal))]['total'][$ju->type] += $ju->total;
         }
 
         // Ambil tanggal paling awal & akhir
         $first = JurnalUmum::orderBy('tanggal')->first();
         $last = JurnalUmum::orderByDesc('tanggal')->first();
 
-        $start = $first ? date('d-m-Y', strtotime($first->tanggal)) : '-';
-        $end = $last ? date('d-m-Y', strtotime($last->tanggal)) : '-';
+        if (!empty($first) && !empty($last)) 
+        {
+            if ($first->tanggal == $last->tanggal) {
+                $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+            } else {
 
-        $filename = "Jurnal Umum ({$start} - {$end}).pdf";
+                if (date('m-Y', strtotime($first->tanggal)) == date('m-Y', strtotime($last->tanggal)) &&
+                    date('d', strtotime($first->tanggal)) != date('d', strtotime($last->tanggal))) 
+                {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j ') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j') .' ' .\Carbon\Carbon::parse($first->tanggal)->translatedFormat('F Y');
+                } else {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+                }
+            }
+        } else if(!empty($first) && empty($last)) {
+            $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+        } else {
+            $periode = \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+        }
+
+        $filename = "Jurnal Umum ({$periode}).pdf";
 
         $pdf = Pdf::loadView('dashboard.pages.report.jurnal-umum.export', [
             'jurnal_umum' => $jurnal_umum,
-            'title' => $filename
+            'title' => $filename,
+            'periode' => $periode
         ]);
         return $pdf->download($filename);
     }

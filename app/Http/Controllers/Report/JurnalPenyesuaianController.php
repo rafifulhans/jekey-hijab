@@ -24,7 +24,7 @@ class JurnalPenyesuaianController extends Controller
 
         $jurnal_penyesuaian = [];
         foreach ($jurnal_penyesuaian_all as $jup) {
-            $jurnal_penyesuaian[date('Y / m / d', strtotime($jup->tanggal))][] = $jup;
+            $jurnal_penyesuaian[date('d / m / Y', strtotime($jup->tanggal))][] = $jup;
         }
 
         return view('dashboard.pages.report.jurnal-penyesuaian.index', [
@@ -206,19 +206,37 @@ class JurnalPenyesuaianController extends Controller
         $first = $jurnal_penyesuaian_all->first();
         $last = $jurnal_penyesuaian_all->last();
 
-        $start = $first ? date('d-m-Y', strtotime($first->tanggal)) : '-';
-        $end = $last ? date('d-m-Y', strtotime($last->tanggal)) : '-';
+        if (!empty($first) && !empty($last)) 
+        {
+            if ($first->tanggal == $last->tanggal) {
+                $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+            } else {
 
-        $filename = "Jurnal Penyesuaian ({$start} - {$end}).pdf";
+                if (date('m-Y', strtotime($first->tanggal)) == date('m-Y', strtotime($last->tanggal)) &&
+                    date('d', strtotime($first->tanggal)) != date('d', strtotime($last->tanggal))) 
+                {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j ') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j') .' ' .\Carbon\Carbon::parse($first->tanggal)->translatedFormat('F Y');
+                } else {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+                }
+            }
+        } else if(!empty($first) && empty($last)) {
+            $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+        } else {
+            $periode = \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+        }
+
+        $filename = "Jurnal Penyesuaian ({$periode}).pdf";
 
         $jurnal_penyesuaian = [];
         foreach ($jurnal_penyesuaian_all as $jup) {
-            $jurnal_penyesuaian[date('Y / m / d', strtotime($jup->tanggal))][] = $jup;
+            $jurnal_penyesuaian[date('d/m/Y', strtotime($jup->tanggal))][] = $jup;
         }
 
         $pdf = Pdf::loadView('dashboard.pages.report.jurnal-penyesuaian.export', [
             'jurnal_penyesuaian' => $jurnal_penyesuaian,
-            'title' => $filename
+            'title' => $filename,
+            'periode' => $periode
         ]);
         return $pdf->download($filename);
     }

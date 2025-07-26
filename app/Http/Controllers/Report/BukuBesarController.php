@@ -90,13 +90,30 @@ class BukuBesarController extends Controller
         }
 
         // Ambil tanggal paling awal & akhir
-        $first = $buku_besar->first();
-        $last = $buku_besar->last();
+        $first = $buku_besar->last();
+        $last = $buku_besar->first();
 
-        $start = $first ? date('d-m-Y', strtotime($first->tanggal)) : '-';
-        $end = $last ? date('d-m-Y', strtotime($last->tanggal)) : '-';
+        if (!empty($first) && !empty($last)) 
+        {
+            if ($first->tanggal == $last->tanggal) {
+                $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+            } else {
 
-        $filename = "Buku Besar ({$start} - {$end}).pdf";
+                if (date('m-Y', strtotime($first->tanggal)) == date('m-Y', strtotime($last->tanggal)) &&
+                    date('d', strtotime($first->tanggal)) != date('d', strtotime($last->tanggal))) 
+                {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j ') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j') .' ' .\Carbon\Carbon::parse($first->tanggal)->translatedFormat('F Y');
+                } else {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+                }
+            }
+        } else if(!empty($first) && empty($last)) {
+            $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+        } else {
+            $periode = \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+        }
+
+        $filename = "Buku Besar ({$periode}).pdf";
 
         $buku_besar_grouped = [];
         foreach ($buku_besar as $bukbes) {
@@ -110,7 +127,8 @@ class BukuBesarController extends Controller
         $pdf = Pdf::loadView('dashboard.pages.report.buku-besar.export', [
             'buku_besar' => $buku_besar,
             'buku_besar_grouped' => $buku_besar_grouped,
-            'title' => $filename
+            'title' => $filename,
+            'periode' => $periode
         ]);
         return $pdf->download($filename);
     }

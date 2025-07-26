@@ -136,18 +136,38 @@ class LabaRugiController extends Controller
 
         $total_bersih = $sum_pendapatan - $sum_beban;
 
-        $first = LabaRugi::orderBy('tanggal')->first();
-        $last = LabaRugi::orderByDesc('tanggal')->first();
+        $lrf = LabaRugi::orderBy('tanggal')->get();
 
-        $start = $first ? date('d-m-Y', strtotime($first->tanggal)) : '-';
-        $end = $last ? date('d-m-Y', strtotime($last->tanggal)) : '-';
+        $first = $lrf->first();
+        $last = $lrf->last();
 
-        $filename = "Laba Rugi ({$start} - {$end}).pdf";
+        if (!empty($first) && !empty($last)) 
+        {
+            if ($first->tanggal == $last->tanggal) {
+                $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+            } else {
+
+                if (date('m-Y', strtotime($first->tanggal)) == date('m-Y', strtotime($last->tanggal)) &&
+                    date('d', strtotime($first->tanggal)) != date('d', strtotime($last->tanggal))) 
+                {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j ') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j') .' ' .\Carbon\Carbon::parse($first->tanggal)->translatedFormat('F Y');
+                } else {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+                }
+            }
+        } else if(!empty($first) && empty($last)) {
+            $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+        } else {
+            $periode = \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+        }
+
+        $filename = "Laba Rugi ({$periode}).pdf";
 
         $pdf = Pdf::loadView('dashboard.pages.report.laba-rugi.export', [
             'title' => $filename,
             'laba_rugi' => $laba_rugi,
-            'total_bersih' => $total_bersih
+            'total_bersih' => $total_bersih,
+            'periode' => $periode
         ]);
         return $pdf->download($filename);
     }

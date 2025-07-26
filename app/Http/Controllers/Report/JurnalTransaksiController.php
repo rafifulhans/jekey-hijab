@@ -467,7 +467,7 @@ class JurnalTransaksiController extends Controller
         if (!empty(session()->get('date-filter'))) 
         {
             $date = session()->get('date-filter');
-            $jurnal_transaksi = JurnalTransaksi::whereBetween('tanggal', [$date['start'], $date['end']])->get();
+            $jurnal_transaksi = JurnalTransaksi::whereBetween('tanggal', [$date['start'], $date['end']])->orderByDesc('tanggal')->orderByDesc('created_at')->get();
 
         } else {
             $jurnal_transaksi = JurnalTransaksi::orderByDesc('tanggal')->orderByDesc('created_at')->get();
@@ -480,14 +480,32 @@ class JurnalTransaksiController extends Controller
         $first = $jurnal_transaksi->last();
         $last = $jurnal_transaksi->first();
 
-        $start = $first ? date('d-m-Y', strtotime($first->tanggal)) : '-';
-        $end = $last ? date('d-m-Y', strtotime($last->tanggal)) : '-';
+        if (!empty($first) && !empty($last)) 
+        {
+            if ($first->tanggal == $last->tanggal) {
+                $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+            } else {
 
-        $filename = "Jurnal Transaksi ({$start} - {$end}).pdf";
+                if (date('m-Y', strtotime($first->tanggal)) == date('m-Y', strtotime($last->tanggal)) &&
+                    date('d', strtotime($first->tanggal)) != date('d', strtotime($last->tanggal))) 
+                {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j ') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j') .' ' .\Carbon\Carbon::parse($first->tanggal)->translatedFormat('F Y');
+                } else {
+                    $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y') . ' - ' . \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+                }
+            }
+        } else if(!empty($first) && empty($last)) {
+            $periode = \Carbon\Carbon::parse($first->tanggal)->translatedFormat('j F Y');
+        } else {
+            $periode = \Carbon\Carbon::parse($last->tanggal)->translatedFormat('j F Y');
+        }
+
+        $filename = "Jurnal Transaksi ({$periode}).pdf";
 
         $pdf = Pdf::loadView('dashboard.pages.report.jurnal-transaksi.export', [
             'jurnal_transaksi' => $jurnal_transaksi,
-            'title' => $filename
+            'title' => $filename,
+            'periode' => $periode
         ]);
         return $pdf->download($filename);
     }

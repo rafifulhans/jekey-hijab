@@ -35,10 +35,10 @@
                                     <td>
                                         <h6 class="mb-0">{{ $piu->kode }}</h6>
                                     </td>
-                                    <td>{{ $piu->tanggal }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($piu->tanggal)) }}</td>
                                     <td>{{ $piu->nama_pelanggan }}</td>
                                     <td>{{ Number::currency($piu->jumlah, 'IDR', 'id_ID') }}</td>
-                                    <td>{{ $piu->jatuh_tempo }}</td>
+                                    <td>{{ date('d-m-Y', strtotime($piu->jatuh_tempo)) }}</td>
                                     <td>{{ $piu->status_pembayaran }}</td>
                                     <td>
                                         @if (auth()->user()->role == 3)

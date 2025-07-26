@@ -90,7 +90,7 @@
                                                 @endphp
                                                 <tr>
 
-                                                    @if (count($buk_group) == 1)
+                                                    @if (count($bkg) == 1)
                                                         <td>
                                                             {{ $year }}<i>{{ ' - '.date('F', strtotime($bg->tanggal)) }}</i>
                                                         </td>
