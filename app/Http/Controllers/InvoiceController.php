@@ -44,9 +44,9 @@ class InvoiceController extends Controller
             'tanggal' => 'required|date',
             'nama_customer' => 'required|string|min:0|max:255',
             'alamat_customer' => 'required|string|min:0|max:255',
-            'metode_pembayaran' => 'required|exists:metode_pembayaran,id_metode_pembayaran',
+            'metode_pembayaran' => 'required|string|exists:metode_pembayaran,id_metode_pembayaran',
             'nama_barang' => 'required|array',
-            'nama_barang.*' => 'required|numeric',
+            'nama_barang.*' => 'required|string|exists:produk,id_produk',
 
             'qty' => 'required|array',
             'qty.*' => 'required|numeric|min:1',
@@ -106,7 +106,7 @@ class InvoiceController extends Controller
         foreach ($request->nama_barang as $key => $nb)
         {
             $rincian = [
-                'id_invoice' => $invoice->id,
+                'id_invoice' => $invoice->id_invoice,
                 'nama_barang' => Produk::where('id_produk', $nb)->first()->nama,
                 'qty'   => $request->qty[$key],
                 'harga' => $request->harga[$key],

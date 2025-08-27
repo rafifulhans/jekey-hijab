@@ -4,15 +4,21 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\GeneratesPrefixedId;
 
 class Ref extends Model
 {
-    use HasFactory;
+    use HasFactory, GeneratesPrefixedId;
 
     protected $table = 'ref';
+    protected $primaryKey = 'id_ref';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $guarded = [];
 
     public $timestamps = false;
+
+    protected string $idPrefix = 'REF';
 
     public function labaRugi()
     {

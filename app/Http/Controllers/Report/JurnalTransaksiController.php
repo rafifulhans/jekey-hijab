@@ -253,7 +253,7 @@ class JurnalTransaksiController extends Controller
     public function simpan(Request $request)
     {
         $ref = $request->validate([
-            'ref' => 'required|integer',
+            'ref' => 'required|string|exists:ref,id_ref',
             'tanggal' => 'required|date',
             'total' => 'required|numeric|min:0',
             'type' => 'required|in:1,2'

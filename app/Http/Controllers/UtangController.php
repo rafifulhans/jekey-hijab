@@ -44,13 +44,7 @@ class UtangController extends Controller
             'status' => 'in:0,1'
         ]);
 
-        $last = Utang::orderByDesc('id_utang')->first();
-        if ($last && preg_match('/UTG-(\d+)/', $last->kode, $match)) {
-            $nextNumber = intval($match[1]) + 1;
-        } else {
-            $nextNumber = 1;
-        }
-        $utang_data['kode'] = 'UTG-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        // Kolom kode dihapus; gunakan id_utang sebagai identifikasi tampilan jika perlu
 
         Utang::create($utang_data);
 

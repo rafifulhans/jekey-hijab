@@ -65,7 +65,7 @@ class BukuBesarController extends Controller
     {
         $request->validate([
             'group' => 'required|string|min:3|max:255',
-            'id_buku_besar' => 'required|numeric|exists:buku_besar,id_buku_besar',
+            'id_buku_besar' => 'required|string|exists:buku_besar,id_buku_besar',
             'keterangan' => 'required|string|min:3|max:255'
         ]);
 

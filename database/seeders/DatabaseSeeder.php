@@ -17,48 +17,54 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // --- Referensi
-        $refs = DB::table('ref')->insert(
-            [
-                ['nama_akun' => 'Kas', 'kode' => 101],
-                ['nama_akun' => 'Pendapatan Jasa', 'kode' => 102],
-                ['nama_akun' => 'Penjualan', 'kode' => 103],
-                ['nama_akun' => 'Modal Awal', 'kode' => 104],
-                ['nama_akun' => 'Piutang Usaha', 'kode' => 105],
-                ['nama_akun' => 'Beban Gaji', 'kode' => 201],
-                ['nama_akun' => 'Beban Listrik', 'kode' => 202],
-                ['nama_akun' => 'Utang Usaha', 'kode' => 203],
-                ['nama_akun' => 'Beban Operasional', 'kode' => 204],
-                ['nama_akun' => 'Beban Pemasaran', 'kode' => 205]
-            ]
-        );
+        // --- Referensi (gunakan model agar ID prefiks otomatis terisi)
+        foreach ([
+            ['nama_akun' => 'Kas', 'kode' => '101'],
+            ['nama_akun' => 'Pendapatan Jasa', 'kode' => '102'],
+            ['nama_akun' => 'Penjualan', 'kode' => '103'],
+            ['nama_akun' => 'Modal Awal', 'kode' => '104'],
+            ['nama_akun' => 'Piutang Usaha', 'kode' => '105'],
+            ['nama_akun' => 'Beban Gaji', 'kode' => '201'],
+            ['nama_akun' => 'Beban Listrik', 'kode' => '202'],
+            ['nama_akun' => 'Utang Usaha', 'kode' => '203'],
+            ['nama_akun' => 'Beban Operasional', 'kode' => '204'],
+            ['nama_akun' => 'Beban Pemasaran', 'kode' => '205'],
+        ] as $ref) {
+            Ref::firstOrCreate(
+                ['kode' => $ref['kode']],
+                $ref
+            );
+        }
 
-        // --- Master Data
-        $metodes = DB::table('metode_pembayaran')->insert(
-            [
-                ['nama' => 'BCA'],
-                ['nama' => 'Mandiri'],
-                ['nama' => 'BRI'],
-                ['nama' => 'BNI'],
-                ['nama' => 'OVO'],
-                ['nama' => 'DANA'],
-                ['nama' => 'Gopay'],
-                ['nama' => 'ShopeePay'],
-                ['nama' => 'Cash on Delivery (COD)'],
-                ['nama' => 'Transfer Bank'],
-                ['nama' => 'Kartu Kredit'],
-                ['nama' => 'QRIS'],
-                ['nama' => 'LinkAja'],
-                ['nama' => 'Alfamart'],
-                ['nama' => 'Indomaret'],
-                ['nama' => 'Kartu Debit'],
-                ['nama' => 'Kartu Prabayar'],
-                ['nama' => 'Virtual Account'],
-                ['nama' => 'E-Wallet']
-            ]
-        );
+        // --- Master Data: Metode Pembayaran
+        foreach ([
+            ['nama' => 'BCA'],
+            ['nama' => 'Mandiri'],
+            ['nama' => 'BRI'],
+            ['nama' => 'BNI'],
+            ['nama' => 'OVO'],
+            ['nama' => 'DANA'],
+            ['nama' => 'Gopay'],
+            ['nama' => 'ShopeePay'],
+            ['nama' => 'Cash on Delivery (COD)'],
+            ['nama' => 'Transfer Bank'],
+            ['nama' => 'Kartu Kredit'],
+            ['nama' => 'QRIS'],
+            ['nama' => 'LinkAja'],
+            ['nama' => 'Alfamart'],
+            ['nama' => 'Indomaret'],
+            ['nama' => 'Kartu Debit'],
+            ['nama' => 'Kartu Prabayar'],
+            ['nama' => 'Virtual Account'],
+            ['nama' => 'E-Wallet'],
+        ] as $m) {
+            MetodePembayaran::firstOrCreate(
+                ['nama' => $m['nama']],
+                $m
+            );
+        }
 
-        $marketplaces = DB::table('marketplace')->insert([
+        foreach ([
             ['nama' => 'Shopee'],
             ['nama' => 'Tokopedia'],
             ['nama' => 'Bukalapak'],
@@ -68,10 +74,15 @@ class DatabaseSeeder extends Seeder
             ['nama' => 'Zalora'],
             ['nama' => 'Bhinneka'],
             ['nama' => 'Elevenia'],
-            ['nama' => 'Orami']
-        ]);
+            ['nama' => 'Orami'],
+        ] as $mp) {
+            Marketplace::firstOrCreate(
+                ['nama' => $mp['nama']],
+                $mp
+            );
+        }
 
-        $ekspedisis = DB::table('ekspedisi')->insert([
+        foreach ([
             ['nama' => 'JNE'],
             ['nama' => 'TIKI'],
             ['nama' => 'POS Indonesia'],
@@ -81,10 +92,15 @@ class DatabaseSeeder extends Seeder
             ['nama' => 'Anteraja'],
             ['nama' => 'Ninja Xpress'],
             ['nama' => 'Lion Parcel'],
-            ['nama' => 'Wahana']
-        ]);
+            ['nama' => 'Wahana'],
+        ] as $ex) {
+            Ekspedisi::firstOrCreate(
+                ['nama' => $ex['nama']],
+                $ex
+            );
+        }
 
-        $produks = DB::table('produk')->insert([
+        foreach ([
             ['nama' => 'Jilbab Segi Empat', 'harga' => 50000, 'deskripsi' => 'Jilbab segi empat dengan bahan berkualitas tinggi.', 'slug' => 'jilbab-segi-empat'],
             ['nama' => 'Jilbab Pashmina', 'harga' => 75000, 'deskripsi' => 'Jilbab pashmina yang stylish dan nyaman dipakai.', 'slug' => 'jilbab-pashmina'],
             ['nama' => 'Jilbab Instan', 'harga' => 60000, 'deskripsi' => 'Jilbab instan yang mudah dipakai dan praktis.', 'slug' => 'jilbab-instan'],
@@ -97,8 +113,13 @@ class DatabaseSeeder extends Seeder
             ['nama' => 'Jilbab Anak', 'harga' => 40000, 'deskripsi' => 'Jilbab anak dengan desain lucu dan nyaman.', 'slug' => 'jilbab-anak'],
             ['nama'=> 'Jilbab Sport', 'harga' => 55000, 'deskripsi' => 'Jilbab sport yang nyaman untuk berolahraga.', 'slug' => 'jilbab-sport'],
             ['nama'=> 'Jilbab Premium', 'harga' => 120000, 'deskripsi' => 'Jilbab premium dengan bahan berkualitas tinggi.', 'slug' => 'jilbab-premium'],
-            ['nama'=> 'Jilbab Limited Edition', 'harga' => 150000, 'deskripsi' => 'Jilbab limited edition dengan desain eksklusif.', 'slug' => 'jilbab-limited-edition']
-        ]);
+            ['nama'=> 'Jilbab Limited Edition', 'harga' => 150000, 'deskripsi' => 'Jilbab limited edition dengan desain eksklusif.', 'slug' => 'jilbab-limited-edition'],
+        ] as $p) {
+            Produk::firstOrCreate(
+                ['slug' => $p['slug']],
+                $p
+            );
+        }
 
         // // --- Invoice
         // Invoice::factory()->count(5)->create([

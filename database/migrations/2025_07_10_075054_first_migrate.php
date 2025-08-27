@@ -4,25 +4,24 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
     public function up(): void
     {
         Schema::create('marketplace', function (Blueprint $table) {
-            $table->id('id_marketplace');
+            $table->string('id_marketplace', 255)->primary();
             $table->string('nama', 50);
         });
 
         Schema::create('ekspedisi', function (Blueprint $table) {
-            $table->id('id_ekspedisi');
+            $table->string('id_ekspedisi', 255)->primary();
             $table->string('nama', 30);
         });
 
         Schema::create('produk', function (Blueprint $table) {
-            $table->id('id_produk');
+            $table->string('id_produk', 255)->primary();
             $table->string('nama');
             $table->decimal('harga', 10, 2)->default(0);
             $table->string('slug');
@@ -32,16 +31,16 @@ return new class extends Migration
         });
 
         Schema::create('metode_pembayaran', function (Blueprint $table) {
-            $table->id('id_metode_pembayaran');
+            $table->string('id_metode_pembayaran', 255)->primary();
             $table->string('nama', 30);
         });
 
         Schema::create('penjualan', function (Blueprint $table) {
-            $table->id('id_penjualan');
-            $table->foreignId('id_marketplace')->references('id_marketplace')->on('marketplace')->onDelete('cascade');
-            $table->foreignId('id_ekspedisi')->references('id_ekspedisi')->on('ekspedisi');
-            $table->foreignId('id_metode_pembayaran')->references('id_metode_pembayaran')->on('metode_pembayaran');
-            $table->foreignId('id_produk')->references('id_produk')->on('produk');
+            $table->string('id_penjualan', 255)->primary();
+            $table->string('id_marketplace', 255)->references('id_marketplace')->on('marketplace')->onDelete('cascade');
+            $table->string('id_ekspedisi', 255)->references('id_ekspedisi')->on('ekspedisi');
+            $table->string('id_metode_pembayaran', 255)->references('id_metode_pembayaran')->on('metode_pembayaran');
+            $table->string('id_produk', 255)->references('id_produk')->on('produk');
             $table->string('nama_marketplace', 50);
             $table->string('nama_ekspedisi', 30);
             $table->string('nomor_resi', 50);
@@ -63,9 +62,10 @@ return new class extends Migration
             $table->timestamps();
         });
 
+
         Schema::create('invoice', function (Blueprint $table) {
-            $table->id('id_invoice');
-            $table->foreignId('id_metode_pembayaran')->references('id_metode_pembayaran')->on('metode_pembayaran');
+            $table->string('id_invoice', 255)->primary();
+            $table->string('id_metode_pembayaran', 255)->references('id_metode_pembayaran')->on('metode_pembayaran');
             $table->string('metode_pembayaran', 30);
             $table->date('tanggal');
             $table->string('invoice');
@@ -79,7 +79,8 @@ return new class extends Migration
         });
 
         Schema::create('invoice_barang', function (Blueprint $table) {
-            $table->foreignId('id_invoice')->references('id_invoice')->on('invoice')->onDelete('cascade');
+            $table->string('id_invoice_barang', 255)->primary();
+            $table->string('id_invoice', 255)->references('id_invoice')->on('invoice')->onDelete('cascade');
             $table->string('nama_barang');
             $table->integer('qty');
             $table->decimal('harga', 10, 2)->default(0);
@@ -88,14 +89,14 @@ return new class extends Migration
         });
 
         Schema::create('ref', function (Blueprint $table) {
-            $table->id('id_ref');
+            $table->string('id_ref', 255)->primary();
             $table->string('nama_akun', 50)->nullable();
             $table->string('kode', 30);
         });
 
         Schema::create('laba_rugi', function (Blueprint $table) {
-            $table->id('id_laba_rugi');
-            $table->foreignId('id_ref')->nullable()->references('id_ref')->on('ref');
+            $table->string('id_laba_rugi', 255)->primary();
+            $table->string('id_ref', 255)->nullable()->references('id_ref')->on('ref');
             $table->string('nama_akun', 50)->nullable();
             $table->tinyInteger('type')->nullable();
             $table->integer('jumlah');
@@ -104,8 +105,8 @@ return new class extends Migration
         });
 
         Schema::create('neraca_saldo', function (Blueprint $table) {
-            $table->id('id_neraca_saldo');
-            $table->foreignId('id_ref')->nullable()->references('id_ref')->on('ref');
+            $table->string('id_neraca_saldo', 255)->primary();
+            $table->string('id_ref', 255)->nullable()->references('id_ref')->on('ref');
             $table->string('nama_akun', 50);
             $table->decimal('debit', 10, 2)->nullable()->default(0);
             $table->decimal('kredit', 10, 2)->nullable()->default(0);
@@ -113,15 +114,15 @@ return new class extends Migration
         });
 
         Schema::create('kategori_laporan', function (Blueprint $table) {
-            $table->id('id_kategori_laporan');
+            $table->string('id_kategori_laporan', 255)->primary();
             $table->string('nama');
             $table->string('kode', 30);
             $table->tinyInteger('type')->nullable();
         });
 
         Schema::create('arus_kas', function (Blueprint $table) {
-            $table->id('id_arus_kas');
-            $table->foreignId('id_ref')->nullable()->references('id_ref')->on('ref');
+            $table->string('id_arus_kas', 255)->primary();
+            $table->string('id_ref', 255)->nullable()->references('id_ref')->on('ref');
             $table->decimal('total', 10, 2);
             $table->date('tanggal');
             $table->tinyInteger('type')->nullable();
@@ -131,8 +132,8 @@ return new class extends Migration
         });
 
         Schema::create('jurnal_transaksi', function (Blueprint $table) {
-            $table->id('id_jurnal_transaksi');
-            $table->foreignId('id_ref')->nullable()->references('id_ref')->on('ref');
+            $table->string('id_jurnal_transaksi', 255)->primary();
+            $table->string('id_ref', 255)->nullable()->references('id_ref')->on('ref');
             $table->string('nama_akun', 50);
             $table->tinyInteger('type')->nullable();
             $table->decimal('total', 10, 2)->nullable();
@@ -141,8 +142,8 @@ return new class extends Migration
         });
 
         Schema::create('jurnal_umum', function (Blueprint $table) {
-            $table->id('id_jurnal_umum');
-            $table->foreignId('id_ref')->nullable()->references('id_ref')->on('ref');
+            $table->string('id_jurnal_umum', 255)->primary();
+            $table->string('id_ref', 255)->nullable()->references('id_ref')->on('ref');
             $table->string('nama_akun', 50);
             $table->tinyInteger('type')->nullable();
             $table->decimal('total', 10, 2)->nullable();
@@ -151,8 +152,8 @@ return new class extends Migration
         });
 
         Schema::create('jurnal_penyesuaian', function (Blueprint $table) {
-            $table->id('id_jurnal_penyesuaian');
-            $table->foreignId('id_ref')->nullable()->references('id_ref')->on('ref');
+            $table->string('id_jurnal_penyesuaian', 255)->primary();
+            $table->string('id_ref', 255)->nullable()->references('id_ref')->on('ref');
             $table->string('nama_akun', 50);
             $table->tinyInteger('type')->nullable();
             $table->decimal('total', 10, 2)->nullable();
@@ -162,8 +163,8 @@ return new class extends Migration
         });
 
         Schema::create('buku_besar', function (Blueprint $table) {
-            $table->id('id_buku_besar');
-            $table->foreignId('id_ref')->nullable()->references('id_ref')->on('ref');
+            $table->string('id_buku_besar', 255)->primary();
+            $table->string('id_ref', 255)->nullable()->references('id_ref')->on('ref');
             $table->string('group', 50)->nullable();
             $table->string('keterangan', 50)->nullable();
             $table->decimal('debit', 10, 2)->nullable()->default(0);
@@ -173,7 +174,7 @@ return new class extends Migration
         });
 
         Schema::create('piutang', function (Blueprint $table) {
-            $table->id('id_piutang');
+            $table->string('id_piutang', 255)->primary();
             $table->string('kode');
             $table->string('nama_pelanggan');
             $table->decimal('jumlah', 10, 2)->nullable();
@@ -184,7 +185,7 @@ return new class extends Migration
         });
 
         Schema::create('utang', function (Blueprint $table) {
-            $table->id('id_utang');
+            $table->string('id_utang', 255)->primary();
             $table->string('kode');
             $table->string('nama_pemasok');
             $table->decimal('jumlah', 10, 2)->nullable();
@@ -195,7 +196,7 @@ return new class extends Migration
         });
 
         Schema::create('persetujuan_pengeluaran_grosir', function (Blueprint $table) {
-            $table->id('id_persetujuan_pengeluaran_grosir');
+            $table->string('id_persetujuan_pengeluaran_grosir', 255)->primary();
             $table->decimal('nominal', 10, 2)->nullable();
             $table->string('tujuan', 50);
             $table->string('dokumen')->nullable();

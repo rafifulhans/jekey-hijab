@@ -57,11 +57,11 @@ class PenjualanController extends Controller
     public function simpan(Request $request)
     {
         $request->validate([
-            'marketplace' => 'required|exists:marketplace,id_marketplace',
+            'marketplace' => 'required|string|exists:marketplace,id_marketplace',
             'no_resi' => 'required|string|max:50',
-            'no_telp_pembeli' => 'required|numeric',
-            'ekspedisi' => 'required|exists:ekspedisi,id_ekspedisi',
-            'produk' => 'required|exists:marketplace,id_marketplace',
+            'no_telp_pembeli' => 'required|string|max:30',
+            'ekspedisi' => 'required|string|exists:ekspedisi,id_ekspedisi',
+            'produk' => 'required|string|exists:produk,id_produk',
             'varian' => 'required|string|max:255',
             'qty' => 'required|integer|min:1',
             'subtotal' => 'required|numeric|min:0',
@@ -71,7 +71,7 @@ class PenjualanController extends Controller
             'email_pembeli' => 'required|email|max:255',
             'status_order' => ['required', Rule::in(array_keys(config('status.order')))],
             'status_pembayaran' => ['required', Rule::in(array_keys(config('status.pembayaran')))],
-            'metode_pembayaran' => 'required|exists:metode_pembayaran,id_metode_pembayaran',
+            'metode_pembayaran' => 'required|string|exists:metode_pembayaran,id_metode_pembayaran',
             'tanggal_pembayaran' => 'required|date'
         ]);
 
@@ -132,21 +132,21 @@ class PenjualanController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'marketplace' => 'required|exists:marketplace,id_marketplace',
+            'marketplace' => 'required|string|exists:marketplace,id_marketplace',
             'no_resi' => 'required|string|max:50',
-            'ekspedisi' => 'required|exists:ekspedisi,id_ekspedisi',
-            'produk' => 'required|exists:marketplace,id_marketplace',
+            'ekspedisi' => 'required|string|exists:ekspedisi,id_ekspedisi',
+            'produk' => 'required|string|exists:produk,id_produk',
             'varian' => 'required|string|max:255',
             'qty' => 'required|integer|min:1',
             'subtotal' => 'required|numeric|min:0',
             'diskon' => 'nullable|numeric|min:0',
             'ongkir' => 'nullable|numeric|min:0',
             'alamat_pembeli' => 'required|string|max:500',
-            'no_telp_pembeli' => 'required|numeric',
+            'no_telp_pembeli' => 'required|string|max:30',
             'email_pembeli' => 'required|email|max:255',
             'status_order' => ['required', Rule::in(array_keys(config('status.order')))],
             'status_pembayaran' => ['required', Rule::in(array_keys(config('status.pembayaran')))],
-            'metode_pembayaran' => 'required|exists:metode_pembayaran,id_metode_pembayaran',
+            'metode_pembayaran' => 'required|string|exists:metode_pembayaran,id_metode_pembayaran',
             'tanggal_pembayaran' => 'required|date'
         ]);
 

@@ -9,7 +9,6 @@ class PiutangFactory extends Factory
     public function definition(): array
     {
         return [
-            'kode' => 'PIU-' . $this->faker->unique()->numerify('###'),
             'nama_pelanggan' => $this->faker->name(),
             'jumlah' => $this->faker->randomFloat(2, 50000, 1000000),
             'tanggal' => $this->faker->date(),

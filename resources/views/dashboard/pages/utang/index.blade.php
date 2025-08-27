@@ -33,7 +33,7 @@
                             @foreach($utang as $piu)
                                 <tr>
                                     <td>
-                                        <h6 class="mb-0">{{ $piu->kode }}</h6>
+                                        <h6 class="mb-0">{{ $piu->id_utang }}</h6>
                                     </td>
                                     <td>{{ date('d-m-Y', strtotime($piu->tanggal)) }}</td>
                                     <td>{{ $piu->nama_pemasok }}</td>

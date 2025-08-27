@@ -4,14 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Concerns\GeneratesPrefixedId;
 
 class Penjualan extends Model
 {
-    use HasFactory;
+    use HasFactory, GeneratesPrefixedId;
 
     protected $table = 'penjualan';
     protected $primaryKey = 'id_penjualan';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $guarded = [];
+
+    protected string $idPrefix = 'PJ';
 
     public function marketplace()
     {

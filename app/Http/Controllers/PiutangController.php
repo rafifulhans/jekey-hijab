@@ -45,13 +45,7 @@ class PiutangController extends Controller
             'status' => 'in:0,1'
         ]);
 
-        $last = Piutang::orderByDesc('id_piutang')->first();
-        if ($last && preg_match('/PIU-(\d+)/', $last->kode, $match)) {
-            $nextNumber = intval($match[1]) + 1;
-        } else {
-            $nextNumber = 1;
-        }
-        $piutang_data['kode'] = 'PIU-' . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+        // Kolom kode dihapus; gunakan id_piutang sebagai identifikasi tampilan jika perlu
 
         Piutang::create($piutang_data);
 

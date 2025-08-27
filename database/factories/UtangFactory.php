@@ -9,7 +9,6 @@ class UtangFactory extends Factory
     public function definition(): array
     {
         return [
-            'kode' => 'UTG-' . $this->faker->unique()->numerify('###'),
             'nama_pemasok' => $this->faker->company(),
             'jumlah' => $this->faker->randomFloat(2, 50000, 2000000),
             'tanggal' => $this->faker->date(),
