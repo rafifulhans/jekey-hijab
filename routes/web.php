@@ -105,4 +105,6 @@ Route::middleware(['auth'])->group(function () {
     // Produk Controller
     Route::get('/produk', [Controllers\ProdukController::class, 'indeks'])->name('produk');
     Route::get('/produk/tambah', [Controllers\ProdukController::class, 'tambah'])->name('produk.tambah');
+
+    
 });

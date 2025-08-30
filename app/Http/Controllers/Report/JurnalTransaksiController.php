@@ -45,9 +45,11 @@ class JurnalTransaksiController extends Controller
             $jurnal_transaksi = JurnalTransaksi::orderBy('tanggal', 'asc')->orderBy('created_at', 'asc')->get();
         }
 
-        $jurnal_transaksi->map(function ($jurnal_transaksi) {
-            $jurnal_transaksi->kode = Ref::where('id_ref', $jurnal_transaksi->id_ref)->first()->kode;
+        $jurnal_transaksi = $jurnal_transaksi->map(function ($jurnal_transaksi) {
+        $jurnal_transaksi->kode = Ref::where('id_ref', $jurnal_transaksi->id_ref)->pluck('kode')->first();
+        return $jurnal_transaksi;
         });
+
 
         return view('dashboard.pages.report.jurnal-transaksi.index', [
             'jurnal_transaksi' => $jurnal_transaksi,

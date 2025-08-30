@@ -31,18 +31,18 @@
                             <tr>
                                 <td class="px-0 text-dark">Pendapatan:</td>
                             </tr>
-                            @foreach ($laba_rugi['pendapatan'] as $lb)
+                            @foreach ($laba_rugi['pendapatan'] as $rg)
                                 <tr>
                                     @php
-                                        if ($lb->jumlah > 1)
+                                        if ($rg->jumlah > 1)
                                         {
-                                            $nama_akun = $lb->nama_akun . ' (' . date('M') . ')';
+                                            $nama_akun = $rg->nama_akun . ' (' . date('M') . ')';
                                         } else {
-                                            $nama_akun = $lb->nama_akun . ' (' . App\Models\Ref::with('labaRugi')->where('id_ref', $lb->id_ref)->first()->kode . ')';
+                                            $nama_akun = $rg->nama_akun . ' (' . App\Models\Ref::with('labaRugi')->where('id_ref', $rg->id_ref)->first()->kode . ')';
                                         }
                                     @endphp
                                     <td class="px-0">{{ $nama_akun }}</td>
-                                    <td class="px-0 text-dark fw-medium text-end">{{ Number::currency($lb->total, 'IDR', 'id_ID') }}</td>
+                                    <td class="px-0 text-dark fw-medium text-end">{{ Number::currency($rg->total, 'IDR', 'id_ID') }}</td>
                                 </tr>
                             @endforeach
 
@@ -61,7 +61,7 @@
                                         {
                                             $nama_akun = $rg->nama_akun . ' (' . date('M') . ')';
                                         } else {
-                                            $nama_akun = $lb->nama_akun . ' (' . App\Models\Ref::with('labaRugi')->where('id_ref', $lb->id_ref)->first()->kode . ')';
+                                            $nama_akun = $rg->nama_akun . ' (' . App\Models\Ref::with('labaRugi')->where('id_ref', $rg->id_ref)->first()->kode . ')';
                                         }
                                     @endphp
                                     <td class="px-0">{{ $nama_akun }}</td>
