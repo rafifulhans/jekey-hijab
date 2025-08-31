@@ -104,7 +104,45 @@ Route::middleware(['auth'])->group(function () {
 
     // Produk Controller
     Route::get('/produk', [Controllers\ProdukController::class, 'indeks'])->name('produk');
-    Route::get('/produk/tambah', [Controllers\ProdukController::class, 'tambah'])->name('produk.tambah');
+    Route::get('/produk/tambah', [Controllers\ProdukController::class, 'tambah'])->name('produk.tambah');    
 
-    
+    // Ref
+    Route::get('/ref', [Controllers\RefController::class, 'indeks'])->name('ref');
+    Route::get('/ref/tambah', [Controllers\RefController::class, 'tambah'])->name('ref.tambah');
+    Route::post('/ref', [Controllers\RefController::class, 'simpan'])->name('ref.simpan');
+    Route::get('/ref/{id}/edit', [Controllers\RefController::class, 'edit'])->name('ref.edit');
+    Route::put('/ref/{id}/update', [Controllers\RefController::class, 'update'])->name('ref.update');
+    Route::delete('/ref/{id}/hapus', [Controllers\RefController::class, 'hapus'])->name('ref.hapus');
+
+    // Metode Pembayaran
+    Route::get('/metode-pembayaran', [Controllers\MetodePembayaranController::class, 'indeks'])->name('metode-pembayaran');
+    Route::get('/metode-pembayaran/tambah', [Controllers\MetodePembayaranController::class, 'tambah'])->name('metode-pembayaran.tambah');
+    Route::post('/metode-pembayaran', [Controllers\MetodePembayaranController::class, 'simpan'])->name('metode-pembayaran.simpan');
+    Route::get('/metode-pembayaran/{id}/edit', [Controllers\MetodePembayaranController::class, 'edit'])->name('metode-pembayaran.edit');
+    Route::put('/metode-pembayaran/{id}/update', [Controllers\MetodePembayaranController::class, 'update'])->name('metode-pembayaran.update');
+    Route::delete('/metode-pembayaran/{id}/hapus', [Controllers\MetodePembayaranController::class, 'hapus'])->name('metode-pembayaran.hapus');
+
+    // Marketplace
+    Route::get('/marketplace', [Controllers\MarketplaceController::class, 'indeks'])->name('marketplace');
+    Route::get('/marketplace/tambah', [Controllers\MarketplaceController::class, 'tambah'])->name('marketplace.tambah');
+    Route::post('/marketplace', [Controllers\MarketplaceController::class, 'simpan'])->name('marketplace.simpan');
+    Route::get('/marketplace/{id}/edit', [Controllers\MarketplaceController::class, 'edit'])->name('marketplace.edit');
+    Route::put('/marketplace/{id}/update', [Controllers\MarketplaceController::class, 'update'])->name('marketplace.update');
+    Route::delete('/marketplace/{id}/hapus', [Controllers\MarketplaceController::class, 'hapus'])->name('marketplace.hapus');
+
+    // Ekspedisi
+    Route::get('/ekspedisi', [Controllers\EkspedisiController::class, 'indeks'])->name('ekspedisi');
+    Route::get('/ekspedisi/tambah', [Controllers\EkspedisiController::class, 'tambah'])->name('ekspedisi.tambah');
+    Route::post('/ekspedisi', [Controllers\EkspedisiController::class, 'simpan'])->name('ekspedisi.simpan');
+    Route::get('/ekspedisi/{id}/edit', [Controllers\EkspedisiController::class, 'edit'])->name('ekspedisi.edit');
+    Route::put('/ekspedisi/{id}/update', [Controllers\EkspedisiController::class, 'update'])->name('ekspedisi.update');
+    Route::delete('/ekspedisi/{id}/hapus', [Controllers\EkspedisiController::class, 'hapus'])->name('ekspedisi.hapus');
+
+    // Produk
+    Route::get('/produk', [Controllers\ProdukController::class, 'indeks'])->name('produk');
+    Route::get('/produk/tambah', [Controllers\ProdukController::class, 'tambah'])->name('produk.tambah');
+    Route::post('/produk', [Controllers\ProdukController::class, 'simpan'])->name('produk.simpan');
+    Route::get('/produk/{id}/edit', [Controllers\ProdukController::class, 'edit'])->name('produk.edit');
+    Route::put('/produk/{id}/update', [Controllers\ProdukController::class, 'update'])->name('produk.update');
+    Route::delete('/produk/{id}/hapus', [Controllers\ProdukController::class, 'hapus'])->name('produk.hapus');
 });

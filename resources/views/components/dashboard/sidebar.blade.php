@@ -33,6 +33,13 @@
     @case(2)
         <x-dashboard.sidebar-link icon="ti ti-shopping-cart" link="{{ route('penjualan') }}" title="Penjualan" />
         <x-dashboard.sidebar-link icon="ti ti-receipt" link="{{ route('invoice') }}" title="Invoice" />
+        <x-dashboard.sidebar-link-dropdown :submenus="[
+                    ['link' => route('metode-pembayaran'), 'icon' => 'ti ti-circle', 'title' => 'Metode Pembayaran'],
+                    ['link' => route('marketplace'), 'icon' => 'ti ti-circle', 'title' => 'Marketplace'],
+                    ['link' => route('ekspedisi'), 'icon' => 'ti ti-circle', 'title' => 'Ekspedisi'],
+                    ['link' => route('produk'), 'icon' => 'ti ti-circle', 'title' => 'Produk']
+                ]" :icon="'ti ti-aperture'"
+            link="{{ route('piutang') }}" icon="ti ti-folder" title="Manajemen Kustom"></x-dashboard.sidebar-link-dropdown>
         @break
     @case(3)
         <x-dashboard.sidebar-link icon="ti ti-aperture" link="{{ route('penjualan') }}" title="Riwayat Penjualan" />
@@ -44,6 +51,7 @@
                 ]" :icon="'ti ti-aperture'"
             link="{{ route('piutang') }}" icon="ti ti-clipboard" title="Piutang / Utang"></x-dashboard.sidebar-link-dropdown>
         <x-dashboard.sidebar-link icon="ti ti-server" link="{{ route('pengeluaran-grosir') }}" title="Pengeluaran Grosir" />
+        <x-dashboard.sidebar-link icon="ti ti-cloud" link="{{ route('ref') }}" title="Ref"/>
         @break
 
 @endswitch
